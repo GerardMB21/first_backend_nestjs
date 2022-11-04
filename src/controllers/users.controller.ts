@@ -13,43 +13,27 @@ import { UsersService } from 'src/services/users.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private userService: UsersService) {}
+  constructor(private usersService: UsersService) {}
 
   @Get()
-  getUsers(): {
-    status: string;
-    users: User[];
-  } {
+  getUsers(): object {
     return {
       status: 'OK',
-      users: this.userService.getUsers(),
+      users: this.usersService.findAll(),
     };
   }
 
   @Get(':id')
-  getUser(@Param('id') id: string): {
-    status: string;
-    users: User;
-  } {
+  getUser(@Param('id') id: string): object {
     return {
       status: 'OK',
-      users: this.userService.getUser(parseInt(id)),
+      users: this.usersService.findOne(parseInt(id)),
     };
   }
 
   @Post()
-  createUsers(@Body() user: UserDTO): {
-    status: string;
-    user: User;
-  } {
-    return {
-      status: 'OK',
-      user: {
-        id: 1,
-        name: user.name,
-        last_name: user.last_name,
-      },
-    };
+  createUsers(@Body() user: UserDTO): Promise<User> {
+    return this.usersService.createUser(user);
   }
 
   @Patch(':id')
